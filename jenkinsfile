@@ -37,7 +37,7 @@ Pipeline{
         stage('Confirm Deploy To Production'){
             steps{
                 timeout(time: 60 , unit : SECONDS){
-                    input(message: 'Okay to Deploy? , ok : 'Lets\'s Do it!')
+                    input(message: 'Okay to Deploy?' , ok : 'Lets\'s Do it!')
                 }
             }
         }
