@@ -1,0 +1,60 @@
+Pipeline{
+    agent any
+    Stages{
+        stage{'Build'}{
+            Steps{
+                sh 'chmod a+x run_build_script.sh'
+                sh './run_build_script.sh'
+            }
+        }
+        stage('Test'){
+            Parallel{
+                stage('Test On Windows'){
+                    steps{
+                        echo"Running Tests On Windows"
+                    }
+                }
+                stage('Test On Linux'){
+                    steps{
+                        echo"Running Test On Linux"
+                    }
+                }
+
+            }
+        }
+        stage ('Conform Deploy to Staging'){
+            steps{
+                timeout(time: 60 , unit: SECONDS){
+                    input(message: 'Okay To Deploy?',Ok:'Let\'s Do it!')
+                }
+            }
+        }
+        stage('Deploy To Staging'){
+            steps{
+                echo"Deploying to Staging..."
+            }
+        }
+        stage('Confirm Deploy To Production'){
+            steps{
+                timeout(time: 60 , unit : SECONDS){
+                    input(message: 'Okay to Deploy? , ok : 'Lets\'s Do it!')
+                }
+            }
+        }
+        stage ('Deploy to Production'){
+            steps{
+                echo"Deploying to Production..."
+            }
+        }
+
+        
+    }
+    post{
+        Success{
+            echo "Build Succeeded"
+        }
+        Failure{
+            echo"Build failed"
+        }
+    }
+}
